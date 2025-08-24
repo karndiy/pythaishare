@@ -1,3 +1,4 @@
 Flask==3.0.3
 promptpay==0.0.12
 Pillow==10.4.0
+promptpay

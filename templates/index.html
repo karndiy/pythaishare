@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>รายการทั้งหมด</h1>
+
+<div class="cards">
+  {% for r in rows %}
+  <article class="card">
+    <div class="card-body">
+      <h3 class="card-title">{{ r['title'] }}</h3>
+      <div class="meta">วันที่: {{ r['date'] }} · คนหาร: {{ r['people'] }} · ยอดรวม: {{ '%.2f'|format(r['amount']) }} ฿ · ต่อคน: <strong>{{ '%.2f'|format(r['per_person']) }} ฿</strong></div>
+    </div>
+    <div class="card-media">
+      {% if r['qr_path'] %}
+        <img class="qr" src="{{ url_for('qrcodes', filename=r['qr_path']) }}" alt="QR">
+      {% endif %}
+    </div>
+    <div class="card-actions">
+      <a class="btn" href="{{ url_for('detail', share_id=r['id']) }}">ดูรายละเอียด</a>
+      <form method="post" action="{{ url_for('delete_share', share_id=r['id']) }}" onsubmit="return confirm('ลบรายการนี้?')">
+        <button class="btn danger" type="submit">ลบ</button>
+      </form>
+    </div>
+  </article>
+  {% else %}
+    <p>ยังไม่มีรายการ — <a href="{{ url_for('new_share') }}">เพิ่มรายการแรก</a></p>
+  {% endfor %}
+</div>
+{% endblock %}

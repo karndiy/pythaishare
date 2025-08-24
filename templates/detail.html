@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<article class="panel">
+  <header class="panel-header">
+    <h1>{{ row['title'] }}</h1>
+    <div class="meta">วันที่: {{ row['date'] }} · พร้อมเพย์: {{ row['promptpay'] }}</div>
+  </header>
+
+  <section class="panel-body grid-2">
+    <div>
+      <p>จำนวนเงินรวม: <strong>{{ '%.2f'|format(row['amount']) }} ฿</strong></p>
+      <p>คนหาร: <strong>{{ row['people'] }}</strong></p>
+      <p>ราคาต่อคน: <strong class="big">{{ '%.2f'|format(row['per_person']) }} ฿</strong></p>
+      {% if row['evidence_path'] %}
+      <div class="evidence">
+        <div class="label">หลักฐาน</div>
+        <img src="{{ url_for('uploads', filename=row['evidence_path']) }}" alt="evidence"/>
+      </div>
+      {% endif %}
+    </div>
+    <div class="qrbox">
+      {% if row['qr_path'] %}
+        <img class="qr big" src="{{ url_for('qrcodes', filename=row['qr_path']) }}" alt="QR PromptPay">
+        <div class="hint">สแกนเพื่อจ่าย <b>{{ '%.2f'|format(row['per_person']) }} ฿</b></div>
+        <a class="btn" download href="{{ url_for('qrcodes', filename=row['qr_path']) }}">ดาวน์โหลด QR</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <footer class="panel-actions">
+    <a class="btn" href="{{ url_for('index') }}">← กลับหน้ารายการ</a>
+    <form method="post" action="{{ url_for('delete_share', share_id=row['id']) }}" onsubmit="return confirm('ลบรายการนี้?')">
+      <button class="btn danger" type="submit">ลบ</button>
+    </form>
+  </footer>
+</article>
+{% endblock %}

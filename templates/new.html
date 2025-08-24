@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>สร้างรายการใหม่</h1>
+<form class="form" method="post" enctype="multipart/form-data" action="{{ url_for('create_share') }}">
+  <div class="grid">
+    <label>วันที่
+      <input type="date" name="date" value="{{ today }}" required>
+    </label>
+    <label>จำนวนเงิน (บาท)
+      <input type="number" name="amount" id="amount" step="0.01" min="0" required>
+    </label>
+    <label>จำนวนคน
+      <input type="number" name="people" id="people" min="1" required>
+    </label>
+    <label>ราคาต่อคน (อัตโนมัติ)
+      <input type="text" id="perPerson" readonly placeholder="0.00 ฿">
+    </label>
+  </div>
+  <label>รายการ / รายละเอียด
+    <textarea name="title" rows="2" placeholder="เช่น ก๋วยเตี๋ยวทั้งโต๊ะ 5 ชาม + น้ำ"></textarea>
+  </label>
+  <label>เบอร์ พร้อมเพย์ (มือถือ)
+    <input type="tel" name="promptpay" placeholder="เช่น 0812345678 หรือ 66812345678" required>
+  </label>
+  <label>รูปหลักฐาน (สลิป/บิล)
+    <input type="file" name="evidence" accept="image/*">
+  </label>
+
+  <div class="hint">ระบบจะสร้าง QR Code พร้อมเพย์โดยใส่ยอด <b>ราคาต่อคน</b> ให้อัตโนมัติ</div>
+  <button class="btn primary" type="submit">บันทึกและสร้าง QR</button>
+</form>
+
+<script>
+  const amount = document.getElementById('amount');
+  const people = document.getElementById('people');
+  const perPerson = document.getElementById('perPerson');
+  function updateSplit(){
+    const a = parseFloat(amount.value || '0');
+    const p = parseInt(people.value || '0');
+    if (p > 0 && a > 0) {
+      perPerson.value = (Math.round((a / p) * 100) / 100).toFixed(2) + ' ฿';
+    } else {
+      perPerson.value = '';
+    }
+  }
+  amount.addEventListener('input', updateSplit);
+  people.addEventListener('input', updateSplit);
+</script>
+{% endblock %}

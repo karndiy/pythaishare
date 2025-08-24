@@ -1,1 +1,13 @@
-/uploads
+uploads/
+qrcodes/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# SQLite database
+*.db
+
+# Virtual environments
+venv/
+.env
